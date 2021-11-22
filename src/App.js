@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import MainHeader from './components/MainHeader/MainHeader';
+import AuthContext from './components/store/auth-context';
 
 function App() {
 	const storedUserLoggedInInfo = localStorage.getItem('isLoggedIn');
@@ -28,13 +29,19 @@ function App() {
 	};
 
 	return (
-		<React.Fragment>
-			<MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+		<AuthContext.Provider
+			value={{
+				isLoggedIn: isLoggedIn,
+				onLogout: logoutHandler
+			}}
+		>
+			{/* all chlidren inside this have access to it. if i wrap only login with this then only login gets access to it */}
+			<MainHeader />
 			<main>
 				{!isLoggedIn && <Login onLogin={loginHandler} />}
 				{isLoggedIn && <Home onLogout={logoutHandler} />}
 			</main>
-		</React.Fragment>
+		</AuthContext.Provider>
 	);
 }
 
